@@ -9,8 +9,8 @@ import { Posts } from './posts.model';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  loadedPosts = [];
-
+  loadedPosts : Posts[] = [];
+  isLoading=false;
   constructor(private http: HttpClient) {}
 
   ngOnInit() {
@@ -37,6 +37,7 @@ export class AppComponent implements OnInit {
 
   fetchPosts()
   {
+    this.isLoading=true;
     this.http.get<{[key:string]:Posts}>(
       'https://angular-course-db-b6f6a-default-rtdb.firebaseio.com/posts.json'
     ).pipe(map(
@@ -51,7 +52,11 @@ export class AppComponent implements OnInit {
       }
     ))
     .subscribe(
-      responseData => console.log(responseData)
+      (responseData)=>{
+        this.isLoading=false;
+        this.loadedPosts=responseData;
+        console.log(this.loadedPosts)
+      }
     )
   }
 }
