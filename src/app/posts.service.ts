@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Posts } from './posts.model';
 import { map, mergeMap } from 'rxjs/operators';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Subject, Subscription } from 'rxjs';
 
 @Injectable({
@@ -33,7 +33,13 @@ export class PostsService {
   fetchPosts()
   {
    return this.http.get<{[key:string]:Posts}>(
-      'https://angular-course-db-b6f6a-default-rtdb.firebaseio.com/posts.json'
+      'https://angular-course-db-b6f6a-default-rtdb.firebaseio.com/posts.json',{
+        headers: new HttpHeaders({
+          'custom-header' : 'hello'
+        }),
+        //this is simply just like 'posts.json?print=pretty
+        params : new HttpParams().set('print','pretty')
+      }
     ).pipe(map(
       (responseData) =>{
        const responseArray=[]
